@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using LandonApi.Filters;
+using LandonApi.Infrastructure;
 using LandonApi.Models;
+using LandonApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,11 +33,16 @@ namespace LandonApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<HotelInfo>(Configuration.GetSection("Info"));
+            services.AddScoped<IRoomService, DefaultRoomService>();
 
             services.AddDbContext<HotelApiDbContext>(
                 opt => opt.UseInMemoryDatabase("landondb"));
 
-            services.AddMvc(opt => { opt.Filters.Add<JsonExceptionFilter>(); })
+            services.AddMvc(opt =>
+                {
+                    opt.Filters.Add<JsonExceptionFilter>();
+                    opt.Filters.Add<LinkRewritingFilter>();
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddRouting(opt => opt.LowercaseUrls = true);
             services.AddApiVersioning(opt =>
@@ -53,6 +61,8 @@ namespace LandonApi
                     policy.WithOrigins("https://example.com");
                 });
             });
+
+            services.AddAutoMapper(opt => opt.AddProfile<MappingProfile>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
