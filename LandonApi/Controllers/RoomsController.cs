@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 using LandonApi.Models;
 using LandonApi.Services;
 
@@ -17,10 +18,17 @@ namespace LandonApi.Controllers
             _roomService = roomService;
         }
 
-        [HttpGet(Name = nameof(GetRooms))]
-        public IActionResult GetRooms()
+        [HttpGet(Name = nameof(GetAllRooms))]
+        public async Task<ActionResult<Collection<Room>>> GetAllRooms()
         {
-            throw new NotImplementedException();
+            var rooms = await _roomService.GetRoomsAsync();
+            var collection = new Collection<Room>
+            {
+                Self = Link.ToCollection(nameof(GetAllRooms)),
+                Value = rooms.ToArray(),
+            };
+
+            return collection;
         }
 
         [HttpGet("{roomId}", Name = nameof(GetRoomById))]

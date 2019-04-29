@@ -21,7 +21,6 @@ namespace LandonApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            throw new NotImplementedException();
             return "value";
         }
 
