@@ -13,5 +13,14 @@ namespace LandonApi.Models
 
         [Range(1, 100, ErrorMessage = "Limit must be greater than 0 and less 100.")]
         public int? Limit { get; set; }
+
+        public PagingOptions Replace(PagingOptions newer)
+        {
+            return new PagingOptions
+            {
+                Offset = newer.Offset ?? Offset,
+                Limit = newer.Limit ?? Limit
+            };
+        }
     }
 }

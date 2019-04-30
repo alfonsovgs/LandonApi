@@ -36,6 +36,7 @@ namespace LandonApi
         {
             services.Configure<HotelInfo>(Configuration.GetSection("Info"));
             services.Configure<HotelOptions>(Configuration);
+            services.Configure<PagingOptions>(Configuration.GetSection("PagingOptions"));
 
             services.AddScoped<IRoomService, DefaultRoomService>();
             services.AddScoped<IOpeningService, DefaultOpeningService>();
