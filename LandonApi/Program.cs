@@ -20,7 +20,11 @@ namespace LandonApi
             host.Run();
         }
 
-        private static void InitializeDatabase(IWebHost host)
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
+        
+        public static void InitializeDatabase(IWebHost host)
         {
             using (var scope = host.Services.CreateScope())
             {
@@ -30,16 +34,12 @@ namespace LandonApi
                 {
                     SeedData.InitializeAsync(services).Wait();
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(e, "An error occurred seeding the database.");
+                    logger.LogError(ex, "An error occurred seeding the database.");
                 }
             }
         }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
     }
 }

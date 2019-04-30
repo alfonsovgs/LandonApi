@@ -1,10 +1,10 @@
-﻿using System;
+﻿using LandonApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LandonApi.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace LandonApi.Controllers
 {
@@ -19,11 +19,12 @@ namespace LandonApi.Controllers
             _hotelInfo = hotelInfoWrapper.Value;
         }
 
-        [HttpGet]
+        [HttpGet(Name = nameof(GetInfo))]
         [ProducesResponseType(200)]
         public ActionResult<HotelInfo> GetInfo()
         {
             _hotelInfo.Href = Url.Link(nameof(GetInfo), null);
+
             return _hotelInfo;
         }
     }

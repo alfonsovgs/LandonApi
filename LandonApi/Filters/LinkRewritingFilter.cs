@@ -25,8 +25,8 @@ namespace LandonApi.Filters
         {
             var asObjectResult = context.Result as ObjectResult;
             bool shouldSkip = asObjectResult?.StatusCode >= 400
-                              || asObjectResult?.Value == null
-                              || asObjectResult?.Value as Resource == null;
+                || asObjectResult?.Value == null
+                || asObjectResult?.Value as Resource == null;
 
             if (shouldSkip)
             {
@@ -44,7 +44,8 @@ namespace LandonApi.Filters
             if (model == null) return;
 
             var allProperties = model
-                .GetType().GetProperties()
+                .GetType().GetTypeInfo()
+                .GetAllProperties()
                 .Where(p => p.CanRead)
                 .ToArray();
 
@@ -58,6 +59,8 @@ namespace LandonApi.Filters
 
                 linkProperty.SetValue(model, rewritten);
 
+                // Special handling of the hidden Self property:
+                // unwrap into the root object
                 if (linkProperty.Name == nameof(Resource.Self))
                 {
                     allProperties
@@ -108,6 +111,7 @@ namespace LandonApi.Filters
             object model,
             LinkRewriter rewriter)
         {
+
             foreach (var arrayProperty in arrayProperties)
             {
                 var array = arrayProperty.GetValue(model) as Array ?? new Array[0];
@@ -118,5 +122,6 @@ namespace LandonApi.Filters
                 }
             }
         }
+
     }
 }

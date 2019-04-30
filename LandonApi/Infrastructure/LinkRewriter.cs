@@ -1,9 +1,9 @@
-﻿using System;
+﻿using LandonApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LandonApi.Models;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LandonApi.Infrastructure
 {
@@ -24,7 +24,7 @@ namespace LandonApi.Infrastructure
             {
                 Href = _urlHelper.Link(original.RouteName, original.RouteValues),
                 Method = original.Method,
-                Relations = original.Relations,
+                Relations = original.Relations
             };
         }
     }
