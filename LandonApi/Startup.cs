@@ -82,6 +82,15 @@ namespace LandonApi
 
             services.AddAutoMapper(
                 options => options.AddProfile<MappingProfile>());
+
+            services.Configure<ApiBehaviorOptions>(opt =>
+            {
+                opt.InvalidModelStateResponseFactory = ctx =>
+                {
+                    var errorResponse = new ApiError(ctx.ModelState);
+                    return new BadRequestObjectResult(errorResponse);
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
